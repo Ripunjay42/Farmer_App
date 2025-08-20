@@ -4,6 +4,7 @@
     "slug": "farmer_app",
     "version": "1.0.0",
     "orientation": "portrait",
+    "scheme": "farmer-app",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
@@ -24,7 +25,10 @@
     },
     "web": {
       "favicon": "./assets/favicon.png",
-       "bundler": "metro"
-    }
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router"
+    ]
   }
 }
