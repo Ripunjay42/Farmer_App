@@ -37,7 +37,7 @@ export default function LoginScreen() {
   };
 
   return (
-    <View className="flex-1 bg-green-600">
+    <View className="flex-1 bg-green-900">
       <StatusBar style="light" />
       
       {/* Background overlay */}
