@@ -45,7 +45,7 @@ export default function OnboardingScreen3() {
       {/* Header */}
       <View className="flex-row justify-between items-center p-6 pt-14">
         <View />
-        <TouchableOpacity onPress={() => router.replace('/auth/login')}>
+        <TouchableOpacity onPress={() => router.replace('/role-selection')}>
           <Text className="text-gray-600 text-md">Skip</Text>
         </TouchableOpacity>
       </View>

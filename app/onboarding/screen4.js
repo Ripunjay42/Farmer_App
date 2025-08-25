@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { useAuth } from '../../components/context/AuthContext';
 import Animated, { 
   useSharedValue, 
   withTiming, 
@@ -9,6 +10,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 export default function OnboardingScreen4() {
+  const { completeOnboarding } = useAuth();
   const opacity = useSharedValue(0);
   const translateX = useSharedValue(100);
 
@@ -23,10 +25,14 @@ export default function OnboardingScreen4() {
        translateX.value = withTiming(0, { duration: 100 });
   };
 
-  const handleGetStarted = () => {
+  const handleGetStarted = async () => {
     opacity.value = withTiming(100, { duration: 100 });
     translateX.value = withTiming(0, { duration: 100 });
-    setTimeout(() => router.push('/auth/login'), 100);
+    
+    // Mark onboarding as completed
+    await completeOnboarding();
+    
+    setTimeout(() => router.push('/role-selection'), 100);
   };
 
   const animatedStyle = useAnimatedStyle(() => {
@@ -45,7 +51,7 @@ export default function OnboardingScreen4() {
       {/* Header */}
       <View className="flex-row justify-between items-center p-6 pt-14">
         <View />
-        <TouchableOpacity onPress={() => router.replace('/auth/login')}>
+        <TouchableOpacity onPress={() => router.replace('/role-selection')}>
           <Text className="text-gray-600 text-md">Skip</Text>
         </TouchableOpacity>
       </View>
