@@ -41,7 +41,7 @@ export default function SignupScreen() {
   };
 
   return (
-    <View className="flex-1 bg-green-900">
+    <View className="flex-1 bg-gray-950">
       <StatusBar style="light" />
       
       {/* Background with plant image overlay */}

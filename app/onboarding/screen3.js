@@ -13,15 +13,21 @@ export default function OnboardingScreen3() {
   const translateX = useSharedValue(100);
 
   useEffect(() => {
-    opacity.value = withTiming(1, { duration: 500 });
-    translateX.value = withTiming(0, { duration: 500 });
+    opacity.value = withTiming(1, { duration: 300 });
+    translateX.value = withTiming(0, { duration: 300 });
   }, []);
 
   const handleBack = () => {
-    opacity.value = withTiming(0, { duration: 300 });
-    translateX.value = withTiming(100, { duration: 300 });
-    setTimeout(() => router.back(), 100);
+      setTimeout(() => router.push('/onboarding/screen2'), 100);
+       opacity.value = withTiming(100, { duration: 100 });
+       translateX.value = withTiming(0, { duration: 100 });
   };
+
+   const handleNext = () => {
+     opacity.value = withTiming(100, { duration: 100 });
+     translateX.value = withTiming(0, { duration: 100 });
+     setTimeout(() => router.push('/onboarding/screen4'), 100);
+   };
  
    const animatedStyle = useAnimatedStyle(() => {
      return {
@@ -88,7 +94,7 @@ export default function OnboardingScreen3() {
           
           <TouchableOpacity 
             className="bg-green-500 py-3 px-8 rounded-lg"
-            onPress={() => router.push('onboarding/screen4')}
+            onPress={handleNext}
           >
             <Text className="text-white font-semibold text-md">Next</Text>
           </TouchableOpacity>
