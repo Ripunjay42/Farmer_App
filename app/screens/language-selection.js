@@ -35,7 +35,7 @@ function LanguageButton({ language, isSelected, onPress, delay }) {
   return (
     <Animated.View style={buttonAnimatedStyle}>
       <TouchableOpacity
-        className={`p-6 rounded-2xl border-2 shadow-sm ${
+        className={`p-6 rounded-2xl mb-6 border-2 shadow-sm ${
           isSelected
             ? 'bg-green-500 border-green-500'
             : 'bg-white border-green-200'
@@ -89,7 +89,7 @@ export default function LanguageSelectionScreen() {
       console.log('Language saved, navigating to test info...');
       // Navigate to test info screen first
       setTimeout(() => {
-        router.replace('/role-selection');
+        router.replace('screens/role-selection');
       }, 300);
     } catch (error) {
       console.error('Error saving language selection:', error);
@@ -128,8 +128,8 @@ export default function LanguageSelectionScreen() {
       </Animated.View>
 
       {/* Language Options */}
-      <Animated.View style={languageAnimatedStyle} className="flex-1 justify-center px-6">
-        <View className="space-y-4">
+      <Animated.View style={languageAnimatedStyle} className="flex-1 justify-center px-10">
+        <View className="space-y-6">
           {languages.map((lang, index) => (
             <LanguageButton
               key={lang.code}

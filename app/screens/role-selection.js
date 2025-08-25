@@ -53,7 +53,7 @@ export default function RoleSelectionScreen() {
       <StatusBar style="dark" />
       
       {/* Header */}
-      <Animated.View style={titleAnimatedStyle} className="items-center pt-20 pb-8">
+      <Animated.View style={titleAnimatedStyle} className="items-center pt-20 pb-4">
         <View className="w-20 h-20 bg-green-500 rounded-full items-center justify-center mb-6">
           <Text className="text-white text-3xl">🌾</Text>
         </View>
@@ -64,11 +64,11 @@ export default function RoleSelectionScreen() {
       </Animated.View>
 
       {/* Role Selection Cards */}
-      <View className="flex-1 justify-center px-6 space-y-6">
+      <View className="flex-1 justify-center px-10 space-y-24">
         {/* Farmer Option */}
         <Animated.View style={farmerAnimatedStyle}>
           <TouchableOpacity
-            className="bg-white rounded-2xl p-8 shadow-lg border border-green-100"
+            className="bg-white rounded-2xl p-8 shadow-lg border border-green-100 mb-6"
             onPress={() => handleRoleSelect('farmer')}
           >
             <View className="items-center">

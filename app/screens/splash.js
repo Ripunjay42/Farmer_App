@@ -23,7 +23,7 @@ export default function SplashScreen() {
 
     // Navigate to onboarding after animation
     setTimeout(() => {
-      router.replace('/onboarding/screen1');
+      router.replace('screens/language-selection');
     }, 2500);
   }, []);
 

@@ -6,10 +6,6 @@ export default function RootLayout() {
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="splash" options={{ headerShown: false }} />
-      <Stack.Screen name="onboarding/screen1" options={{ headerShown: false }} />
-      <Stack.Screen name="onboarding/screen2" options={{ headerShown: false }} />
-      <Stack.Screen name="onboarding/screen3" options={{ headerShown: false }} />
-      <Stack.Screen name="onboarding/screen4" options={{ headerShown: false }} />
       <Stack.Screen name="language-selection" options={{ headerShown: false }} />
       {/* <Stack.Screen name="test-info" options={{ headerShown: false }} /> */}
       <Stack.Screen name="role-selection" options={{ headerShown: false }} />
