@@ -21,9 +21,9 @@ export default function SplashScreen() {
     );
     logoOpacity.value = withTiming(1, { duration: 800 });
 
-    // For now, always navigate to language selection after animation
+    // Navigate to onboarding after animation
     setTimeout(() => {
-      router.replace('/language-selection');
+      router.replace('/onboarding/screen1');
     }, 2500);
   }, []);
 

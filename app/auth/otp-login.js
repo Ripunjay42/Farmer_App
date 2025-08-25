@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, TextInput, Alert } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { AuthService } from '../../components/services/apiService';
-import { useAuth } from '../../components/context/AuthContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Animated, { 
   useSharedValue, 
   withTiming, 
@@ -12,7 +12,6 @@ import Animated, {
 
 export default function OTPLoginScreen() {
   const { role } = useLocalSearchParams();
-  const { login } = useAuth();
   const [mobileNumber, setMobileNumber] = useState('');
   const [otp, setOtp] = useState('');
   const [showOTPInput, setShowOTPInput] = useState(false);
@@ -82,8 +81,12 @@ export default function OTPLoginScreen() {
       const data = await AuthService.verifyOTP(mobileNumber, otp);
       
       if (data.success) {
-        // Store token and user data in context
-        await login(data.token, role, data.userData);
+        // Store token and user data
+        await AsyncStorage.setItem('authToken', data.token);
+        await AsyncStorage.setItem('userRole', role);
+        if (data.userData) {
+          await AsyncStorage.setItem('userProfile', JSON.stringify(data.userData));
+        }
         
         // Check if new user needs KYC
         if (data.isNewUser) {

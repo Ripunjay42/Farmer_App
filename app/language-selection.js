@@ -86,16 +86,16 @@ export default function LanguageSelectionScreen() {
     
     try {
       await AsyncStorage.setItem('selectedLanguage', languageCode);
-      console.log('Language saved, navigating to onboarding...');
-      // Navigate to onboarding screens
+      console.log('Language saved, navigating to role selection...');
+      // Navigate to role selection
       setTimeout(() => {
-        router.replace('/onboarding/screen1');
+        router.replace('/role-selection');
       }, 300);
     } catch (error) {
       console.error('Error saving language selection:', error);
       // Still navigate even if there's an error
       setTimeout(() => {
-        router.replace('/onboarding/screen1');
+        router.replace('/role-selection');
       }, 300);
     }
   };
