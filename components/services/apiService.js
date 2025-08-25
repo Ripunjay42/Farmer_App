@@ -1,24 +1,16 @@
-const API_BASE_URL = 'https://your-api-domain.com'; // Replace with your actual API URL
+// Dummy API service for testing without real backend
 
 class AuthService {
   static async sendOTP(mobileNumber, role) {
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/send-otp`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          mobileNumber,
-          role
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      return await response.json();
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // Dummy response - always success
+      return {
+        success: true,
+        message: 'OTP sent successfully'
+      };
     } catch (error) {
       console.error('Send OTP error:', error);
       throw error;
@@ -27,22 +19,26 @@ class AuthService {
 
   static async verifyOTP(mobileNumber, otp) {
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/verify-otp`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          mobileNumber,
-          otp
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      // Dummy verification logic
+      if (otp === '123456') {
+        return {
+          success: true,
+          token: 'dummy_jwt_token_' + Date.now(),
+          isNewUser: mobileNumber === '9999999999' ? false : true, // 9999999999 is existing user
+          userData: {
+            name: 'Test User',
+            mobile: mobileNumber
+          }
+        };
+      } else {
+        return {
+          success: false,
+          message: 'Invalid OTP. Use 123456 for testing'
+        };
       }
-
-      return await response.json();
     } catch (error) {
       console.error('Verify OTP error:', error);
       throw error;
@@ -53,21 +49,15 @@ class AuthService {
 class KYCService {
   static async sendAadhaarOTP(aadhaarNumber) {
     try {
-      const response = await fetch(`${API_BASE_URL}/kyc/aadhaar/send-otp`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          aadhaarNumber
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      return await response.json();
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // Dummy response - always success
+      return {
+        success: true,
+        transactionId: 'dummy_txn_' + Date.now(),
+        message: 'Aadhaar OTP sent successfully'
+      };
     } catch (error) {
       console.error('Send Aadhaar OTP error:', error);
       throw error;
@@ -76,22 +66,26 @@ class KYCService {
 
   static async verifyAadhaarOTP(transactionId, otp) {
     try {
-      const response = await fetch(`${API_BASE_URL}/kyc/aadhaar/verify-otp`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          transactionId,
-          otp
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      // Dummy verification logic
+      if (otp === '654321') {
+        return {
+          success: true,
+          userData: {
+            name: 'John Doe',
+            fatherName: 'Father Name',
+            address: '123 Test Street, Test City, Test State - 123456',
+            aadhaarNumber: '************1234'
+          }
+        };
+      } else {
+        return {
+          success: false,
+          message: 'Invalid Aadhaar OTP. Use 654321 for testing'
+        };
       }
-
-      return await response.json();
     } catch (error) {
       console.error('Verify Aadhaar OTP error:', error);
       throw error;

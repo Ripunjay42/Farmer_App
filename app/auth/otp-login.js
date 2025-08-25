@@ -81,6 +81,7 @@ export default function OTPLoginScreen() {
       const data = await AuthService.verifyOTP(mobileNumber, otp);
       
       if (data.success) {
+        console.log('OTP verification successful:', data);
         // Store token and user data
         await AsyncStorage.setItem('authToken', data.token);
         await AsyncStorage.setItem('userRole', role);
@@ -89,11 +90,21 @@ export default function OTPLoginScreen() {
         }
         
         // Check if new user needs KYC
+        console.log('User type check - isNewUser:', data.isNewUser);
+        console.log('About to navigate to Aadhaar KYC');
+        
+        // For testing, always go to KYC first
+        router.replace('/auth/aadhaar-kyc');
+        
+        /* Original logic - uncomment after testing
         if (data.isNewUser) {
+          console.log('New user detected, navigating to Aadhaar KYC');
           router.replace('/auth/aadhaar-kyc');
         } else {
+          console.log('Existing user, navigating to home');
           router.replace('/(tabs)/home');
         }
+        */
       } else {
         Alert.alert('Error', data.message || 'Invalid OTP');
       }
@@ -166,6 +177,9 @@ export default function OTPLoginScreen() {
               editable={!showOTPInput}
             />
           </View>
+          <Text className="text-blue-600 text-xs mt-1">
+            💡 Test: Use any 10-digit number (9999999999 = existing user)
+          </Text>
         </View>
 
         {/* Send OTP Button */}
@@ -194,6 +208,9 @@ export default function OTPLoginScreen() {
                 keyboardType="numeric"
                 maxLength={6}
               />
+              <Text className="text-blue-600 text-xs mt-1">
+                💡 Test OTP: 123456
+              </Text>
               <View className="flex-row justify-between items-center mt-2">
                 <Text className="text-gray-500 text-sm">
                   Code sent to +91 {mobileNumber}

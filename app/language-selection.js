@@ -86,8 +86,8 @@ export default function LanguageSelectionScreen() {
     
     try {
       await AsyncStorage.setItem('selectedLanguage', languageCode);
-      console.log('Language saved, navigating to role selection...');
-      // Navigate to role selection
+      console.log('Language saved, navigating to test info...');
+      // Navigate to test info screen first
       setTimeout(() => {
         router.replace('/role-selection');
       }, 300);

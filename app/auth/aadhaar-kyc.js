@@ -22,6 +22,7 @@ export default function AadhaarKYCScreen() {
   const otpOpacity = useSharedValue(0);
 
   useEffect(() => {
+    console.log('Aadhaar KYC screen loaded');
     formOpacity.value = withTiming(1, { duration: 600 });
   }, []);
 
@@ -167,6 +168,9 @@ export default function AadhaarKYCScreen() {
           <Text className="text-gray-500 text-xs mt-1">
             Your Aadhaar details are encrypted and secure
           </Text>
+          <Text className="text-blue-600 text-xs">
+            💡 Test: Use any 12-digit number
+          </Text>
         </View>
 
         {/* Send OTP Button */}
@@ -195,6 +199,9 @@ export default function AadhaarKYCScreen() {
                 keyboardType="numeric"
                 maxLength={6}
               />
+              <Text className="text-blue-600 text-xs mt-1">
+                💡 Test OTP: 654321
+              </Text>
               <View className="flex-row justify-between items-center mt-2">
                 <Text className="text-gray-500 text-sm">
                   OTP sent to Aadhaar-linked mobile

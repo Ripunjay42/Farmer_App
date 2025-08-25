@@ -11,6 +11,7 @@ export default function RootLayout() {
       <Stack.Screen name="onboarding/screen3" options={{ headerShown: false }} />
       <Stack.Screen name="onboarding/screen4" options={{ headerShown: false }} />
       <Stack.Screen name="language-selection" options={{ headerShown: false }} />
+      {/* <Stack.Screen name="test-info" options={{ headerShown: false }} /> */}
       <Stack.Screen name="role-selection" options={{ headerShown: false }} />
       <Stack.Screen name="auth/otp-login" options={{ headerShown: false }} />
       <Stack.Screen name="auth/aadhaar-kyc" options={{ headerShown: false }} />
