@@ -137,7 +137,12 @@ const DUMMY_LAND_BUCKETS = [
     district: 'Haveri',
     surveyNo: '123/4',
     area: '2.5 acres',
-    ownerName: 'John Doe'
+    ownerName: 'John Doe',
+    landType: 'Agricultural',
+    geoJson: {
+      type: 'Polygon',
+      coordinates: [[[75.1230, 14.4560], [75.1240, 14.4560], [75.1240, 14.4570], [75.1230, 14.4570], [75.1230, 14.4560]]]
+    }
   },
   {
     bucketId: 'bucket_2',
@@ -146,7 +151,12 @@ const DUMMY_LAND_BUCKETS = [
     district: 'Haveri',
     surveyNo: '456/7',
     area: '3.2 acres',
-    ownerName: 'John Doe'
+    ownerName: 'John Doe',
+    landType: 'Agricultural',
+    geoJson: {
+      type: 'Polygon',
+      coordinates: [[[75.1250, 14.4580], [75.1270, 14.4580], [75.1270, 14.4600], [75.1250, 14.4600], [75.1250, 14.4580]]]
+    }
   },
   {
     bucketId: 'bucket_3',
@@ -155,7 +165,12 @@ const DUMMY_LAND_BUCKETS = [
     district: 'Davangere',
     surveyNo: '789/1',
     area: '1.8 acres',
-    ownerName: 'John Doe'
+    ownerName: 'John Doe',
+    landType: 'Agricultural',
+    geoJson: {
+      type: 'Polygon',
+      coordinates: [[[75.1300, 14.4620], [75.1315, 14.4620], [75.1315, 14.4635], [75.1300, 14.4635], [75.1300, 14.4620]]]
+    }
   }
 ];
 
@@ -171,7 +186,35 @@ const DUMMY_LAND_SEARCH_RESULTS = {
     landType: 'Agricultural',
     geoJson: {
       type: 'Polygon',
-      coordinates: [[[75.123, 14.456], [75.124, 14.456], [75.124, 14.457], [75.123, 14.457], [75.123, 14.456]]]
+      coordinates: [[[75.1230, 14.4560], [75.1240, 14.4560], [75.1240, 14.4570], [75.1230, 14.4570], [75.1230, 14.4560]]]
+    }
+  },
+  '456/7': {
+    landId: 'land_456_7',
+    village: 'Bellur',
+    tehsil: 'Haveri',
+    district: 'Haveri',
+    surveyNo: '456/7',
+    ownerName: 'John Doe',
+    area: '3.2 acres',
+    landType: 'Agricultural',
+    geoJson: {
+      type: 'Polygon',
+      coordinates: [[[75.1250, 14.4580], [75.1270, 14.4580], [75.1270, 14.4600], [75.1250, 14.4600], [75.1250, 14.4580]]]
+    }
+  },
+  '789/1': {
+    landId: 'land_789_1',
+    village: 'Honnali',
+    tehsil: 'Honnali',
+    district: 'Davangere',
+    surveyNo: '789/1',
+    ownerName: 'John Doe',
+    area: '1.8 acres',
+    landType: 'Agricultural',
+    geoJson: {
+      type: 'Polygon',
+      coordinates: [[[75.1300, 14.4620], [75.1315, 14.4620], [75.1315, 14.4635], [75.1300, 14.4635], [75.1300, 14.4620]]]
     }
   },
   '999/1': {
@@ -185,7 +228,7 @@ const DUMMY_LAND_SEARCH_RESULTS = {
     landType: 'Agricultural',
     geoJson: {
       type: 'Polygon',
-      coordinates: [[[75.125, 14.458], [75.126, 14.458], [75.126, 14.459], [75.125, 14.459], [75.125, 14.458]]]
+      coordinates: [[[75.1350, 14.4650], [75.1370, 14.4650], [75.1370, 14.4670], [75.1350, 14.4670], [75.1350, 14.4650]]]
     }
   }
 };

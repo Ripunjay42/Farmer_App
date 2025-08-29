@@ -230,7 +230,7 @@ export default function AddLandManuallyScreen() {
 
         {/* Search Results */}
         {hasSearched && (
-          <View className="bg-white rounded-xl p-6 border border-gray-200">
+          <View className="bg-white rounded-xl p-6 border border-gray-200 mb-16">
             <Text className="text-lg font-bold text-gray-800 mb-4">Search Results</Text>
             
             {searchResults ? (
@@ -281,6 +281,7 @@ export default function AddLandManuallyScreen() {
                 {/* Action Buttons */}
                 <View className="space-y-3">
                   <CustomButton
+                    className='mb-3'
                     title="View on Map"
                     onPress={handleViewOnMap}
                     variant="outline"

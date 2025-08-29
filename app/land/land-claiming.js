@@ -119,6 +119,31 @@ export default function LandClaimingScreen() {
     router.push('/land/add-land-manually');
   };
 
+  const handleViewOnMap = (bucket) => {
+    // Create land data object compatible with map view
+    const landData = {
+      landId: bucket.bucketId,
+      village: bucket.village,
+      tehsil: bucket.tehsil,
+      district: bucket.district,
+      surveyNo: bucket.surveyNo,
+      ownerName: bucket.ownerName,
+      area: bucket.area,
+      landType: bucket.landType || 'Agricultural',
+      geoJson: bucket.geoJson || {
+        type: 'Polygon',
+        coordinates: [[[75.1230, 14.4560], [75.1240, 14.4560], [75.1240, 14.4570], [75.1230, 14.4570], [75.1230, 14.4560]]]
+      }
+    };
+
+    router.push({
+      pathname: '/land/map-view',
+      params: { 
+        landData: JSON.stringify(landData)
+      }
+    });
+  };
+
   if (isLoading) {
     return (
       <View className="flex-1 bg-green-50">
@@ -276,6 +301,17 @@ export default function LandClaimingScreen() {
                           {bucket.ownerName}
                         </Text>
                       </View>
+                    </View>
+                    
+                    {/* Action buttons */}
+                    <View className="flex-row mt-3 space-x-2">
+                      <TouchableOpacity
+                        onPress={() => handleViewOnMap(bucket)}
+                        className="flex-1 bg-blue-500 rounded-lg py-2 px-3 flex-row items-center justify-center"
+                      >
+                        <FontAwesome name="map" size={14} color="white" />
+                        <Text className="text-white text-sm font-semibold ml-1">View on Map</Text>
+                      </TouchableOpacity>
                     </View>
                   </View>
                 </View>
