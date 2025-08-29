@@ -8,7 +8,6 @@ const initialState = {
   user: null,
   userRole: null,
   language: 'en',
-  hasCompletedOnboarding: false,
 };
 
 // Action types
@@ -18,7 +17,6 @@ const AUTH_ACTIONS = {
   SET_USER: 'SET_USER',
   SET_ROLE: 'SET_ROLE',
   SET_LANGUAGE: 'SET_LANGUAGE',
-  SET_ONBOARDING_COMPLETED: 'SET_ONBOARDING_COMPLETED',
   LOGOUT: 'LOGOUT',
 };
 
@@ -35,8 +33,6 @@ function authReducer(state, action) {
       return { ...state, userRole: action.payload };
     case AUTH_ACTIONS.SET_LANGUAGE:
       return { ...state, language: action.payload };
-    case AUTH_ACTIONS.SET_ONBOARDING_COMPLETED:
-      return { ...state, hasCompletedOnboarding: action.payload };
     case AUTH_ACTIONS.LOGOUT:
       return {
         ...initialState,
@@ -65,14 +61,12 @@ export function AuthProvider({ children }) {
 
       // Check authentication status
       const isAuthenticated = await StorageService.isAuthenticated();
-      const hasCompletedOnboarding = await StorageService.hasCompletedOnboarding();
       const language = await StorageService.getLanguage();
       const userRole = await StorageService.getUserRole();
       const userProfile = await StorageService.getUserProfile();
 
       dispatch({ type: AUTH_ACTIONS.SET_AUTHENTICATED, payload: isAuthenticated });
-      dispatch({ type: AUTH_ACTIONS.SET_ONBOARDING_COMPLETED, payload: hasCompletedOnboarding });
-      dispatch({ type: AUTH_ACTIONS.SET_LANGUAGE, payload: language });
+      dispatch({ type: AUTH_ACTIONS.SET_LANGUAGE, payload: language || 'en' });
       dispatch({ type: AUTH_ACTIONS.SET_ROLE, payload: userRole });
       dispatch({ type: AUTH_ACTIONS.SET_USER, payload: userProfile });
     } catch (error) {
@@ -116,15 +110,6 @@ export function AuthProvider({ children }) {
     }
   };
 
-  const completeOnboarding = async () => {
-    try {
-      await StorageService.setOnboardingCompleted();
-      dispatch({ type: AUTH_ACTIONS.SET_ONBOARDING_COMPLETED, payload: true });
-    } catch (error) {
-      console.error('Error completing onboarding:', error);
-    }
-  };
-
   const updateUser = async (userData) => {
     try {
       await StorageService.setUserProfile(userData);
@@ -139,7 +124,6 @@ export function AuthProvider({ children }) {
     login,
     logout,
     setLanguage,
-    completeOnboarding,
     updateUser,
   };
 

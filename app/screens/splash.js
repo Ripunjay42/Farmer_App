@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import { View, Text } from 'react-native';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { useAuth } from '../../components/context/AuthContext';
+import LoadingSpinner from '../../components/ui/LoadingSpinner';
 import Animated, { 
   useSharedValue, 
   withTiming, 
@@ -10,6 +12,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 export default function SplashScreen() {
+  const { isAuthenticated, isLoading, language } = useAuth();
   const logoScale = useSharedValue(0);
   const logoOpacity = useSharedValue(0);
 
@@ -20,12 +23,28 @@ export default function SplashScreen() {
       withTiming(1, { duration: 200 })
     );
     logoOpacity.value = withTiming(1, { duration: 800 });
-
-    // Navigate to onboarding after animation
-    setTimeout(() => {
-      router.replace('screens/language-selection');
-    }, 2500);
   }, []);
+
+  // Separate effect for navigation that waits for auth to finish loading
+  useEffect(() => {
+    console.log('Splash useEffect triggered:', { isLoading, isAuthenticated, language });
+    
+    if (!isLoading) {
+      const timer = setTimeout(() => {
+        console.log('Splash navigation decision:', { isAuthenticated, language, languageIsNull: language === null });
+        
+        if (isAuthenticated) {
+          console.log('User is authenticated, navigating to home');
+          router.replace('/(tabs)/home');
+        } else {
+          console.log('User not authenticated, navigating to language selection');
+          router.replace('/screens/language-selection');
+        }
+      }, 2500); // Wait for animation to complete
+
+      return () => clearTimeout(timer);
+    }
+  }, [isLoading, isAuthenticated, language]);
 
   const logoAnimatedStyle = useAnimatedStyle(() => {
     return {
@@ -45,7 +64,14 @@ export default function SplashScreen() {
             <Text className="text-white text-5xl">🌾</Text>
           </View>
           <Text className="text-3xl font-bold text-green-800 mb-2">FarmApp</Text>
-          <Text className="text-lg text-green-600">Your Agricultural Companion</Text>
+          <Text className="text-lg text-green-600 mb-8">Your Agricultural Companion</Text>
+          
+          {/* Loading indicator while auth is initializing */}
+          {isLoading && (
+            <View className="mt-4">
+              <LoadingSpinner size="small" color="#10b981" />
+            </View>
+          )}
         </Animated.View>
       </View>
     </View>

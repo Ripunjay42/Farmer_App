@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, TextInput, Alert } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { AuthService } from '../../components/services/apiService';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAuth } from '../../components/context/AuthContext';
 import Animated, { 
   useSharedValue, 
   withTiming, 
@@ -12,6 +12,7 @@ import Animated, {
 
 export default function OTPLoginScreen() {
   const { role } = useLocalSearchParams();
+  const { login } = useAuth();
   const [mobileNumber, setMobileNumber] = useState('');
   const [otp, setOtp] = useState('');
   const [showOTPInput, setShowOTPInput] = useState(false);
@@ -82,21 +83,11 @@ export default function OTPLoginScreen() {
       
       if (data.success) {
         console.log('OTP verification successful:', data);
-        // Store token and user data
-        await AsyncStorage.setItem('authToken', data.token);
-        await AsyncStorage.setItem('userRole', role);
-        if (data.userData) {
-          await AsyncStorage.setItem('userProfile', JSON.stringify(data.userData));
-        }
         
-        // Check if new user needs KYC
-        console.log('User type check - isNewUser:', data.isNewUser);
-        console.log('About to navigate to Aadhaar KYC');
+        // Use AuthContext login method
+        await login(data.token, role, data.userData);
         
-        // For testing, always go to KYC first
-        router.replace('/auth/aadhaar-kyc');
-        
-        /* Original logic - uncomment after testing
+        // Check if new user needs KYC or existing user goes to home
         if (data.isNewUser) {
           console.log('New user detected, navigating to Aadhaar KYC');
           router.replace('/auth/aadhaar-kyc');
@@ -104,7 +95,6 @@ export default function OTPLoginScreen() {
           console.log('Existing user, navigating to home');
           router.replace('/(tabs)/home');
         }
-        */
       } else {
         Alert.alert('Error', data.message || 'Invalid OTP');
       }

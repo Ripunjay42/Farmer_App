@@ -110,7 +110,7 @@ export default function AadhaarKYCScreen() {
     sendAadhaarOTP();
   };
 
-  const skipKYC = () => {
+  const skipKYC = async () => {
     Alert.alert(
       'Skip eKYC',
       'You can complete your Aadhaar verification later from your profile. Some features may be limited.',
@@ -118,7 +118,9 @@ export default function AadhaarKYCScreen() {
         { text: 'Cancel', style: 'cancel' },
         {
           text: 'Skip',
-          onPress: () => router.replace('/(tabs)/home')
+          onPress: () => {
+            router.replace('/(tabs)/home');
+          }
         }
       ]
     );

@@ -78,11 +78,11 @@ class StorageService {
       return await AsyncStorage.getItem('selectedLanguage');
     } catch (error) {
       console.error('Error getting language:', error);
-      return 'en'; // Default to English
+      return null; // Return null when no language is set
     }
   }
 
-  // Clear all user data (for logout)
+  // Clear all user data (for logout) - but keep language preference
   static async clearUserData() {
     try {
       await AsyncStorage.multiRemove([
@@ -90,6 +90,7 @@ class StorageService {
         'userRole',
         'userProfile'
       ]);
+      // Keep 'selectedLanguage' so user doesn't have to select again
     } catch (error) {
       console.error('Error clearing user data:', error);
     }
@@ -106,24 +107,6 @@ class StorageService {
     }
   }
 
-  // Check if user has completed onboarding
-  static async hasCompletedOnboarding() {
-    try {
-      const completed = await AsyncStorage.getItem('onboardingCompleted');
-      return completed === 'true';
-    } catch (error) {
-      console.error('Error checking onboarding status:', error);
-      return false;
-    }
-  }
-
-  static async setOnboardingCompleted() {
-    try {
-      await AsyncStorage.setItem('onboardingCompleted', 'true');
-    } catch (error) {
-      console.error('Error setting onboarding completed:', error);
-    }
-  }
 }
 
 export default StorageService;
