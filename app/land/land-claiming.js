@@ -8,15 +8,17 @@ import {
   RefreshControl
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams, useFocusEffect } from 'expo-router';
 import { FontAwesome } from '@expo/vector-icons';
 import { LandService, ApplicationService } from '../../components/services/apiService';
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
 import CustomButton from '../../components/ui/CustomButton';
 
 export default function LandClaimingScreen() {
+  const { addedLand } = useLocalSearchParams();
   const [landBuckets, setLandBuckets] = useState([]);
   const [selectedBuckets, setSelectedBuckets] = useState([]);
+  const [addedLands, setAddedLands] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -24,6 +26,42 @@ export default function LandClaimingScreen() {
   useEffect(() => {
     loadLandBuckets();
   }, []);
+
+  // Handle manually added lands from navigation params
+  useEffect(() => {
+    if (addedLand) {
+      try {
+        const landData = JSON.parse(addedLand);
+        setAddedLands(prev => {
+          // Check if this land is already added to avoid duplicates
+          const exists = prev.some(land => land.surveyNo === landData.surveyNo);
+          if (!exists) {
+            return [...prev, landData];
+          }
+          return prev;
+        });
+      } catch (error) {
+        console.error('Error parsing added land data:', error);
+      }
+    }
+  }, [addedLand]);
+
+  // Listen for manually added lands from other screens
+  useEffect(() => {
+    const handleRouteParams = () => {
+      // This will be triggered when returning from add-land-manually screen
+      // In a real app, you might use a context or navigation params
+    };
+    
+    // Load any saved manually added lands from storage if needed
+    loadAddedLands();
+  }, []);
+
+  const loadAddedLands = () => {
+    // In a real app, this would load from AsyncStorage or context
+    // For now, we'll use a simple state management
+    console.log('Loading manually added lands');
+  };
 
   const loadLandBuckets = async () => {
     try {
@@ -60,14 +98,15 @@ export default function LandClaimingScreen() {
   };
 
   const handleClaimSelected = async () => {
-    if (selectedBuckets.length === 0) {
-      Alert.alert('No Selection', 'Please select at least one land parcel to claim.');
+    const totalLands = selectedBuckets.length + addedLands.length;
+    if (totalLands === 0) {
+      Alert.alert('No Selection', 'Please select at least one land parcel to claim or add land manually.');
       return;
     }
 
     Alert.alert(
       'Confirm Land Claim',
-      `You are about to claim ${selectedBuckets.length} land parcel(s). This action cannot be undone. Continue?`,
+      `You are about to claim ${totalLands} land parcel(s) (${selectedBuckets.length} pre-populated + ${addedLands.length} manually added). This action cannot be undone. Continue?`,
       [
         { text: 'Cancel', style: 'cancel' },
         { 
@@ -85,8 +124,12 @@ export default function LandClaimingScreen() {
       
       const claimData = {
         claimedBuckets: selectedBuckets,
-        addedLands: [] // Will be populated if user manually adds lands
+        addedLands: addedLands // Now properly includes manually added lands
       };
+
+      console.log('Submitting claim data:', claimData);
+      console.log('Added lands count:', addedLands.length);
+      console.log('Selected buckets count:', selectedBuckets.length);
 
       const response = await ApplicationService.claimLands(claimData);
       
@@ -215,11 +258,65 @@ export default function LandClaimingScreen() {
         </View>
 
         {/* Selection Summary */}
-        {selectedBuckets.length > 0 && (
+        {(selectedBuckets.length > 0 || addedLands.length > 0) && (
           <View className="bg-green-100 rounded-xl p-4 mb-6 border border-green-200">
             <Text className="text-green-800 font-semibold">
-              {selectedBuckets.length} land parcel(s) selected
+              {selectedBuckets.length + addedLands.length} land parcel(s) selected 
+              ({selectedBuckets.length} pre-populated + {addedLands.length} manually added)
             </Text>
+          </View>
+        )}
+
+        {/* Manually Added Lands Section */}
+        {addedLands.length > 0 && (
+          <View className="mb-6">
+            <Text className="text-lg font-bold text-gray-800 mb-4">
+              Manually Added Lands
+            </Text>
+            {addedLands.map((land, index) => (
+              <View
+                key={`manual_${index}`}
+                className="bg-blue-50 rounded-xl p-4 mb-4 border border-blue-200"
+              >
+                <View className="flex-row items-center mb-2">
+                  <FontAwesome name="plus-circle" size={16} color="#3b82f6" />
+                  <Text className="text-gray-800 font-bold ml-2">
+                    Survey No: {land.surveyNo}
+                  </Text>
+                </View>
+                
+                <View className="space-y-1">
+                  <View className="flex-row items-center">
+                    <Text className="text-gray-600 text-sm w-20">Village:</Text>
+                    <Text className="text-gray-800 text-sm font-medium">
+                      {land.village}
+                    </Text>
+                  </View>
+                  <View className="flex-row items-center">
+                    <Text className="text-gray-600 text-sm w-20">District:</Text>
+                    <Text className="text-gray-800 text-sm font-medium">
+                      {land.district}
+                    </Text>
+                  </View>
+                  <View className="flex-row items-center">
+                    <Text className="text-gray-600 text-sm w-20">Area:</Text>
+                    <Text className="text-gray-800 text-sm font-medium">
+                      {land.area}
+                    </Text>
+                  </View>
+                </View>
+                
+                <TouchableOpacity
+                  onPress={() => {
+                    setAddedLands(prev => prev.filter((_, i) => i !== index));
+                  }}
+                  className="mt-3 bg-red-500 rounded-lg py-2 px-3 flex-row items-center justify-center"
+                >
+                  <FontAwesome name="trash" size={14} color="white" />
+                  <Text className="text-white text-sm font-semibold ml-1">Remove</Text>
+                </TouchableOpacity>
+              </View>
+            ))}
           </View>
         )}
 
@@ -304,7 +401,7 @@ export default function LandClaimingScreen() {
                     </View>
                     
                     {/* Action buttons */}
-                    <View className="flex-row mt-3 space-x-2">
+                    {/* <View className="flex-row mt-3 space-x-2">
                       <TouchableOpacity
                         onPress={() => handleViewOnMap(bucket)}
                         className="flex-1 bg-blue-500 rounded-lg py-2 px-3 flex-row items-center justify-center"
@@ -312,7 +409,7 @@ export default function LandClaimingScreen() {
                         <FontAwesome name="map" size={14} color="white" />
                         <Text className="text-white text-sm font-semibold ml-1">View on Map</Text>
                       </TouchableOpacity>
-                    </View>
+                    </View> */}
                   </View>
                 </View>
               </TouchableOpacity>
@@ -326,9 +423,9 @@ export default function LandClaimingScreen() {
       {/* Bottom Action Buttons */}
       <View className="bg-white border-t border-gray-200 p-6">
         <CustomButton
-          title={`Claim Selected Lands (${selectedBuckets.length})`}
+          title={`Claim Selected Lands (${selectedBuckets.length + addedLands.length})`}
           onPress={handleClaimSelected}
-          disabled={selectedBuckets.length === 0}
+          disabled={selectedBuckets.length === 0 && addedLands.length === 0}
           loading={isSubmitting}
           variant="primary"
           icon={<FontAwesome name="paper-plane" size={18} color="white" />}

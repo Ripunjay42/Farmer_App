@@ -112,14 +112,23 @@ export default function AddLandManuallyScreen() {
         {
           text: 'Confirm',
           onPress: () => {
-            // In a real app, this would save the land and navigate back
+            // Add the land to the claim list and navigate back
             Alert.alert(
               'Success',
               'Land parcel has been added to your claim. You can now proceed with your application.',
               [
                 {
                   text: 'OK',
-                  onPress: () => router.back()
+                  onPress: () => {
+                    // In a real app, you would store this in AsyncStorage or context
+                    // For now, we'll simulate the addition
+                    router.navigate({
+                      pathname: '/land/land-claiming',
+                      params: {
+                        addedLand: JSON.stringify(searchResults)
+                      }
+                    });
+                  }
                 }
               ]
             );

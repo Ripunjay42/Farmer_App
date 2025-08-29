@@ -135,12 +135,17 @@ export default function MapViewScreen() {
               'This land parcel has been added to your claim. You can now proceed with your application.',
               [
                 {
-                  text: 'Continue',
-                  onPress: () => router.navigate('/land/land-claiming')
+                  text: 'Cancel',
+                  onPress: () => router.navigate('/(tabs)/home')
                 },
                 {
-                  text: 'Go to Home',
-                  onPress: () => router.navigate('/(tabs)/home')
+                  text: 'Continue',
+                  onPress: () => router.navigate({
+                    pathname: '/land/land-claiming',
+                    params: {
+                      addedLand: JSON.stringify(landDetails)
+                    }
+                  })
                 }
               ]
             );
@@ -413,7 +418,7 @@ export default function MapViewScreen() {
           icon={<FontAwesome name="check" size={18} color="white" />}
         />
         
-        <TouchableOpacity onPress={() => router.back()} className="mt-3">
+        <TouchableOpacity onPress={() => router.back()} className="mt-3 mb-3">
           <Text className="text-gray-500 text-center">Go Back to Search</Text>
         </TouchableOpacity>
       </View>
