@@ -1,0 +1,302 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  View, 
+  Text, 
+  ScrollView, 
+  TouchableOpacity, 
+  Alert,
+  RefreshControl
+} from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import { router } from 'expo-router';
+import { FontAwesome } from '@expo/vector-icons';
+import { LandService, ApplicationService } from '../../components/services/apiService';
+import LoadingSpinner from '../../components/ui/LoadingSpinner';
+import CustomButton from '../../components/ui/CustomButton';
+
+export default function LandClaimingScreen() {
+  const [landBuckets, setLandBuckets] = useState([]);
+  const [selectedBuckets, setSelectedBuckets] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    loadLandBuckets();
+  }, []);
+
+  const loadLandBuckets = async () => {
+    try {
+      setIsLoading(true);
+      const response = await LandService.getLandBuckets();
+      
+      if (response.success) {
+        setLandBuckets(response.buckets);
+      } else {
+        Alert.alert('Error', 'Failed to load land data');
+      }
+    } catch (error) {
+      console.error('Error loading land buckets:', error);
+      Alert.alert('Error', 'Failed to load land data. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const onRefresh = async () => {
+    setIsRefreshing(true);
+    await loadLandBuckets();
+    setIsRefreshing(false);
+  };
+
+  const toggleBucketSelection = (bucketId) => {
+    setSelectedBuckets(prev => {
+      if (prev.includes(bucketId)) {
+        return prev.filter(id => id !== bucketId);
+      } else {
+        return [...prev, bucketId];
+      }
+    });
+  };
+
+  const handleClaimSelected = async () => {
+    if (selectedBuckets.length === 0) {
+      Alert.alert('No Selection', 'Please select at least one land parcel to claim.');
+      return;
+    }
+
+    Alert.alert(
+      'Confirm Land Claim',
+      `You are about to claim ${selectedBuckets.length} land parcel(s). This action cannot be undone. Continue?`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { 
+          text: 'Confirm', 
+          onPress: submitClaim,
+          style: 'default'
+        }
+      ]
+    );
+  };
+
+  const submitClaim = async () => {
+    try {
+      setIsSubmitting(true);
+      
+      const claimData = {
+        claimedBuckets: selectedBuckets,
+        addedLands: [] // Will be populated if user manually adds lands
+      };
+
+      const response = await ApplicationService.claimLands(claimData);
+      
+      if (response.success) {
+        Alert.alert(
+          'Success!',
+          `Your land claim application has been submitted successfully.\n\nApplication ID: ${response.applicationId}\nTotal Lands: ${response.totalLands}`,
+          [
+            {
+              text: 'OK',
+              onPress: () => {
+                // Navigate back to home and refresh the data
+                router.replace('/(tabs)/home');
+              }
+            }
+          ]
+        );
+      } else {
+        Alert.alert('Error', response.message || 'Failed to submit land claim');
+      }
+    } catch (error) {
+      console.error('Error submitting claim:', error);
+      Alert.alert('Error', 'Failed to submit land claim. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleAddManually = () => {
+    router.push('/land/add-land-manually');
+  };
+
+  if (isLoading) {
+    return (
+      <View className="flex-1 bg-green-50">
+        <StatusBar style="dark" />
+        <LoadingSpinner size="large" color="#10b981" />
+      </View>
+    );
+  }
+
+  return (
+    <View className="flex-1 bg-green-50">
+      <StatusBar style="dark" />
+      
+      {/* Header */}
+      <View className="bg-green-500 pt-12 pb-6 px-6">
+        <View className="flex-row items-center">
+          <TouchableOpacity 
+            onPress={() => router.back()} 
+            className="mr-4 p-2"
+          >
+            <FontAwesome name="arrow-left" size={24} color="white" />
+          </TouchableOpacity>
+          <View className="flex-1">
+            <Text className="text-white text-xl font-bold">Claim Your Land</Text>
+            <Text className="text-green-100 text-sm">
+              Select the land parcels that belong to you
+            </Text>
+          </View>
+        </View>
+      </View>
+
+      <ScrollView 
+        className="flex-1 px-6 py-6"
+        refreshControl={
+          <RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />
+        }
+      >
+        {/* Instructions */}
+        <View className="bg-blue-50 rounded-xl p-4 mb-6 border border-blue-200">
+          <View className="flex-row items-center mb-2">
+            <FontAwesome name="info-circle" size={20} color="#3b82f6" />
+            <Text className="text-blue-800 font-semibold ml-2">Instructions</Text>
+          </View>
+          <Text className="text-blue-700 text-sm leading-5">
+            • Review the pre-populated land records below
+            {'\n'}• Select the lands that belong to you by tapping the checkbox
+            {'\n'}• If your land is not listed, use "Add Manually" option
+            {'\n'}• Submit your selection to create your land claim application
+          </Text>
+        </View>
+
+        {/* Selection Summary */}
+        {selectedBuckets.length > 0 && (
+          <View className="bg-green-100 rounded-xl p-4 mb-6 border border-green-200">
+            <Text className="text-green-800 font-semibold">
+              {selectedBuckets.length} land parcel(s) selected
+            </Text>
+          </View>
+        )}
+
+        {/* Land Buckets List */}
+        <View className="mb-6">
+          <Text className="text-lg font-bold text-gray-800 mb-4">
+            Available Land Records
+          </Text>
+          
+          {landBuckets.length === 0 ? (
+            <View className="bg-white rounded-xl p-6 items-center border border-gray-200">
+              <FontAwesome name="map-o" size={48} color="#9ca3af" />
+              <Text className="text-gray-500 text-center mt-4 mb-2 font-semibold">
+                No Land Records Found
+              </Text>
+              <Text className="text-gray-400 text-center text-sm">
+                No pre-populated land records are available for your profile.
+                You can manually add your land details.
+              </Text>
+            </View>
+          ) : (
+            landBuckets.map((bucket, index) => (
+              <TouchableOpacity
+                key={bucket.bucketId}
+                onPress={() => toggleBucketSelection(bucket.bucketId)}
+                className={`bg-white rounded-xl p-4 mb-4 border-2 ${
+                  selectedBuckets.includes(bucket.bucketId)
+                    ? 'border-green-500 bg-green-50'
+                    : 'border-gray-200'
+                }`}
+              >
+                <View className="flex-row items-start">
+                  <View className={`w-6 h-6 rounded border-2 mr-4 mt-1 items-center justify-center ${
+                    selectedBuckets.includes(bucket.bucketId)
+                      ? 'border-green-500 bg-green-500'
+                      : 'border-gray-300'
+                  }`}>
+                    {selectedBuckets.includes(bucket.bucketId) && (
+                      <FontAwesome name="check" size={14} color="white" />
+                    )}
+                  </View>
+                  
+                  <View className="flex-1">
+                    <View className="flex-row items-center mb-2">
+                      <FontAwesome name="map-marker" size={16} color="#10b981" />
+                      <Text className="text-gray-800 font-bold ml-2">
+                        Survey No: {bucket.surveyNo}
+                      </Text>
+                    </View>
+                    
+                    <View className="space-y-1">
+                      <View className="flex-row items-center">
+                        <Text className="text-gray-600 text-sm w-20">Village:</Text>
+                        <Text className="text-gray-800 text-sm font-medium">
+                          {bucket.village}
+                        </Text>
+                      </View>
+                      <View className="flex-row items-center">
+                        <Text className="text-gray-600 text-sm w-20">Tehsil:</Text>
+                        <Text className="text-gray-800 text-sm font-medium">
+                          {bucket.tehsil}
+                        </Text>
+                      </View>
+                      <View className="flex-row items-center">
+                        <Text className="text-gray-600 text-sm w-20">District:</Text>
+                        <Text className="text-gray-800 text-sm font-medium">
+                          {bucket.district}
+                        </Text>
+                      </View>
+                      <View className="flex-row items-center">
+                        <Text className="text-gray-600 text-sm w-20">Area:</Text>
+                        <Text className="text-gray-800 text-sm font-medium">
+                          {bucket.area}
+                        </Text>
+                      </View>
+                      <View className="flex-row items-center">
+                        <Text className="text-gray-600 text-sm w-20">Owner:</Text>
+                        <Text className="text-gray-800 text-sm font-medium">
+                          {bucket.ownerName}
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            ))
+          )}
+        </View>
+
+        {/* Add Manually Section */}
+        <View className="bg-white rounded-xl p-6 mb-6 border border-gray-200">
+          <View className="flex-row items-center mb-4">
+            <FontAwesome name="plus-circle" size={24} color="#10b981" />
+            <Text className="text-lg font-bold text-gray-800 ml-3">
+              Land Not Listed?
+            </Text>
+          </View>
+          <Text className="text-gray-600 mb-4 leading-5">
+            If your land is not shown in the above list, you can search and add it manually 
+            using the survey number and other details.
+          </Text>
+          <CustomButton
+            title="Add Land Manually"
+            onPress={handleAddManually}
+            variant="outline"
+            icon={<FontAwesome name="search" size={18} color="#10b981" />}
+          />
+        </View>
+      </ScrollView>
+
+      {/* Bottom Action Buttons */}
+      <View className="bg-white border-t border-gray-200 p-6">
+        <CustomButton
+          title={`Claim Selected Lands (${selectedBuckets.length})`}
+          onPress={handleClaimSelected}
+          disabled={selectedBuckets.length === 0}
+          loading={isSubmitting}
+          variant="primary"
+          icon={<FontAwesome name="paper-plane" size={18} color="white" />}
+        />
+      </View>
+    </View>
+  );
+}

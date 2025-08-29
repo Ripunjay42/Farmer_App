@@ -16,6 +16,9 @@ export default function RootLayout() {
         <Stack.Screen name="auth/login" options={{ headerShown: false }} />
         <Stack.Screen name="auth/signup" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="land/land-claiming" options={{ headerShown: false }} />
+        <Stack.Screen name="land/add-land-manually" options={{ headerShown: false }} />
+        <Stack.Screen name="land/map-view" options={{ headerShown: false }} />
       </Stack>
     </AuthProvider>
   );
