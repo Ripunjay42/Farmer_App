@@ -259,7 +259,7 @@ export default function Home() {
         />
 
         {/* Help Section */}
-        <View className="bg-blue-50 rounded-2xl p-6 mt-6 border border-blue-100">
+        {/* <View className="bg-blue-50 rounded-2xl p-6 mt-6 border border-blue-100">
           <View className="flex-row items-center mb-3">
             <FontAwesome name="info-circle" size={20} color="#3b82f6" />
             <Text className="text-lg font-semibold text-blue-800 ml-2">Need Help?</Text>
@@ -268,7 +268,7 @@ export default function Home() {
             If you need assistance with land claiming or have questions about the process, 
             please contact our support team or visit the nearest government office.
           </Text>
-        </View>
+        </View> */}
       </View>
     </ScrollView>
   );

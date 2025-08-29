@@ -157,7 +157,7 @@ export default function LandClaimingScreen() {
         }
       >
         {/* Instructions */}
-        <View className="bg-blue-50 rounded-xl p-4 mb-6 border border-blue-200">
+        {/* <View className="bg-blue-50 rounded-xl p-4 mb-6 border border-blue-200">
           <View className="flex-row items-center mb-2">
             <FontAwesome name="info-circle" size={20} color="#3b82f6" />
             <Text className="text-blue-800 font-semibold ml-2">Instructions</Text>
@@ -168,6 +168,25 @@ export default function LandClaimingScreen() {
             {'\n'}• If your land is not listed, use "Add Manually" option
             {'\n'}• Submit your selection to create your land claim application
           </Text>
+        </View> */}
+        {/* Add Manually Section */}
+        <View className="bg-white rounded-xl p-6 mb-6 border border-gray-200">
+          <View className="flex-row items-center mb-4">
+            <FontAwesome name="plus-circle" size={24} color="#10b981" />
+            <Text className="text-lg font-bold text-gray-800 ml-3">
+              Land Not Listed?
+            </Text>
+          </View>
+          <Text className="text-gray-600 mb-4 leading-5">
+            If your land is not shown in the above list, you can search and add it manually 
+            using the survey number and other details.
+          </Text>
+          <CustomButton
+            title="Add Land Manually"
+            onPress={handleAddManually}
+            variant="outline"
+            icon={<FontAwesome name="search" size={18} color="#10b981" />}
+          />
         </View>
 
         {/* Selection Summary */}
@@ -265,25 +284,7 @@ export default function LandClaimingScreen() {
           )}
         </View>
 
-        {/* Add Manually Section */}
-        <View className="bg-white rounded-xl p-6 mb-6 border border-gray-200">
-          <View className="flex-row items-center mb-4">
-            <FontAwesome name="plus-circle" size={24} color="#10b981" />
-            <Text className="text-lg font-bold text-gray-800 ml-3">
-              Land Not Listed?
-            </Text>
-          </View>
-          <Text className="text-gray-600 mb-4 leading-5">
-            If your land is not shown in the above list, you can search and add it manually 
-            using the survey number and other details.
-          </Text>
-          <CustomButton
-            title="Add Land Manually"
-            onPress={handleAddManually}
-            variant="outline"
-            icon={<FontAwesome name="search" size={18} color="#10b981" />}
-          />
-        </View>
+
       </ScrollView>
 
       {/* Bottom Action Buttons */}

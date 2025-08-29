@@ -153,7 +153,7 @@ export default function AddLandManuallyScreen() {
 
       <ScrollView className="flex-1 px-6 py-6">
         {/* Instructions */}
-        <View className="bg-blue-50 rounded-xl p-4 mb-6 border border-blue-200">
+        {/* <View className="bg-blue-50 rounded-xl p-4 mb-6 border border-blue-200">
           <View className="flex-row items-center mb-2">
             <FontAwesome name="info-circle" size={20} color="#3b82f6" />
             <Text className="text-blue-800 font-semibold ml-2">How to Search</Text>
@@ -162,7 +162,7 @@ export default function AddLandManuallyScreen() {
             Enter the exact details as mentioned in your land documents. 
             Make sure the survey number format matches your official records (e.g., 123/4, 45/2A, etc.).
           </Text>
-        </View>
+        </View> */}
 
         {/* Search Form */}
         <View className="bg-white rounded-xl p-6 mb-6 border border-gray-200">
